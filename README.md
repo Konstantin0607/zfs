@@ -1,15 +1,15 @@
-#запускаем Vagrant
+#Р·Р°РїСѓСЃРєР°РµРј Vagrant
 
            vagrant up
 
            vagrant ssh
 
-#заходим под суперuser
+#Р·Р°С…РѕРґРёРј РїРѕРґ СЃСѓРїРµСЂuser
 
            sudo -i
 
 
-#ставим утилиты 
+#СЃС‚Р°РІРёРј СѓС‚РёР»РёС‚С‹ 
 
            yum install wget.x86_64
 
@@ -18,7 +18,7 @@
            yum install mc
 
 
-#ставим нужные нам модулей
+#СЃС‚Р°РІРёРј РЅСѓР¶РЅС‹Рµ РЅР°Рј РјРѕРґСѓР»РµР№
 
            sudo dnf install http://download.zfsonlinux.org/epel/zfs-release.el8_2.noarch.rpm
 
@@ -32,7 +32,7 @@
            dnf install kernel-devel zfs
 
 
-#KABI-трекинг kmod
+#KABI-С‚СЂРµРєРёРЅРі kmod
 
            sudo dnf config-manager --disable zfs
 
@@ -40,15 +40,15 @@
 
            sudo dnf install zfs
 
-#автазагрузка OpenZFS
+#Р°РІС‚Р°Р·Р°РіСЂСѓР·РєР° OpenZFS
 
-#создаем
+#СЃРѕР·РґР°РµРј
 
            touch /etc/modules-load.d/zfs.conf
 
            sh -c "echo zfs >/etc/modules-load.d/zfs.conf"
 
-#тестирование репозиториев
+#С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёРµРІ
 
            sudo dnf config-manager --enable zfs-testing
 
@@ -57,37 +57,37 @@
            yum update
 
 
-#вывод версий
+#РІС‹РІРѕРґ РІРµСЂСЃРёР№
 
            dkms status
 
-#доустановка обновлённой версии
+#РґРѕСѓСЃС‚Р°РЅРѕРІРєР° РѕР±РЅРѕРІР»С‘РЅРЅРѕР№ РІРµСЂСЃРёРё
 
            dkms install -m zfs -v 2.0.0
 
-#начинаем работу с ZFS
+#РЅР°С‡РёРЅР°РµРј СЂР°Р±РѕС‚Сѓ СЃ ZFS
 
-#смотрим какие диски есть
+#СЃРјРѕС‚СЂРёРј РєР°РєРёРµ РґРёСЃРєРё РµСЃС‚СЊ
 
            fdisk -l
 
 
-#создаём общее
+#СЃРѕР·РґР°С‘Рј РѕР±С‰РµРµ
 
            zpool create poolmirror mirror sdb sdc sdd
 
-#общее делим на 6 дисков
+#РѕР±С‰РµРµ РґРµР»РёРј РЅР° 6 РґРёСЃРєРѕРІ
 
            echo disk{1..6} | xargs -n 1 fallocate -l 100M
 
-1.#объединяю три диска
+1.#РѕР±СЉРµРґРёРЅСЏСЋ С‚СЂРё РґРёСЃРєР°
 
            zpool create raid raidz1 $PWD/disk[1-3] 
 
            zpool list
 
 
-#создаём файловые системы
+#СЃРѕР·РґР°С‘Рј С„Р°Р№Р»РѕРІС‹Рµ СЃРёСЃС‚РµРјС‹
 
            zfs create raid/1
 
@@ -104,11 +104,11 @@
 
            cd /raid/
 
-#сжатие поддерживаются
+#СЃР¶Р°С‚РёРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ
 
            lzjb | gzip | gzip- [1-9] | zle | lz4 | zstd | zstd- [1-19] | zstd-fast- [1-10,20,30,40,50,60,70,80,90,100,500,1000]
 
-#каждой файловой системе задаем своё сжатие
+#РєР°Р¶РґРѕР№ С„Р°Р№Р»РѕРІРѕР№ СЃРёСЃС‚РµРјРµ Р·Р°РґР°РµРј СЃРІРѕС‘ СЃР¶Р°С‚РёРµ
 
            zfs set compression=gzip raid/1
 
@@ -122,7 +122,7 @@
 
            zfs set compression=zstd raid/6
 
-#смотрим какие ФС с каким сжатием
+#СЃРјРѕС‚СЂРёРј РєР°РєРёРµ Р¤РЎ СЃ РєР°РєРёРј СЃР¶Р°С‚РёРµРј
 
             zfs get compression,compressratio
 
@@ -144,7 +144,7 @@
           raid/6  compressratio  1.00x           -
 
 
-#копируем файл один и тотже в созданные ФС
+#РєРѕРїРёСЂСѓРµРј С„Р°Р№Р» РѕРґРёРЅ Рё С‚РѕС‚Р¶Рµ РІ СЃРѕР·РґР°РЅРЅС‹Рµ Р¤РЎ
 
            cd /raid/1/
 
@@ -171,7 +171,7 @@
           wget -O War_and_Peace6.txt http://www.gutenberg.org/files/2600/2600-0.txt
 
 
-#сново проверяем сжатие но уже с скаченым файлом
+#СЃРЅРѕРІРѕ РїСЂРѕРІРµСЂСЏРµРј СЃР¶Р°С‚РёРµ РЅРѕ СѓР¶Рµ СЃ СЃРєР°С‡РµРЅС‹Рј С„Р°Р№Р»РѕРј
 
           zfs get compression,compressratio
 
@@ -192,20 +192,20 @@
           raid/6  compression    zstd            local
           raid/6  compressratio  2.59x           -
 
-2.#скачиваем файл для задания
+2.#СЃРєР°С‡РёРІР°РµРј С„Р°Р№Р» РґР»СЏ Р·Р°РґР°РЅРёСЏ
 
           wget https://drive.google.com/open?id=1KRBNW33QWqbvbVHa3hLJivOAt60yukkg
 
 
-#распаковываем 
+#СЂР°СЃРїР°РєРѕРІС‹РІР°РµРј 
 
-#переходим где находится данная папка zpoolexport
+#РїРµСЂРµС…РѕРґРёРј РіРґРµ РЅР°С…РѕРґРёС‚СЃСЏ РґР°РЅРЅР°СЏ РїР°РїРєР° zpoolexport
 
-#востанавливаем образ
+#РІРѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕР±СЂР°Р·
 
           zpool import -d zpoolexport/
 
-#вывод / запоминаем имя pool  -  otus
+#РІС‹РІРѕРґ / Р·Р°РїРѕРјРёРЅР°РµРј РёРјСЏ pool  -  otus
 
            pool: otus
                id: 6554193320433390805
@@ -221,12 +221,12 @@
                       /home/zpoolexport/fileb  ONLINE
 
 
-#имя которое запомнили дописываем в конце
+#РёРјСЏ РєРѕС‚РѕСЂРѕРµ Р·Р°РїРѕРјРЅРёР»Рё РґРѕРїРёСЃС‹РІР°РµРј РІ РєРѕРЅС†Рµ
 
            zpool import -d ${PWD}/zpoolexport/ otus
 
 
-#смотрим статус
+#СЃРјРѕС‚СЂРёРј СЃС‚Р°С‚СѓСЃ
 
           zpool status
 
@@ -247,7 +247,7 @@
                       /zpoolexport/fileb  ONLINE       0     0     0
 
 
-#смотрим информации о pool
+#СЃРјРѕС‚СЂРёРј РёРЅС„РѕСЂРјР°С†РёРё Рѕ pool
 
             zfs get all
 
@@ -401,24 +401,24 @@
 
 
 
-3.#cкопировать файл из удаленной директории.
+3.#cРєРѕРїРёСЂРѕРІР°С‚СЊ С„Р°Р№Р» РёР· СѓРґР°Р»РµРЅРЅРѕР№ РґРёСЂРµРєС‚РѕСЂРёРё.
 
            wget https://drive.google.com/file/d/1gH8gCL9y7Nd5Ti3IRmplZPF1XjzxeRAG/view?usp=sharin
 
-#создаем ФС
+#СЃРѕР·РґР°РµРј Р¤РЎ
 
            zfs create otus/1
 
 
-#востонавливаем snapshot
+#РІРѕСЃС‚РѕРЅР°РІР»РёРІР°РµРј snapshot
 
            zfs receive -F otus/1 < otus_task2.file
 
 
-#зашифрованное сообщение в файле
+#Р·Р°С€РёС„СЂРѕРІР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РІ С„Р°Р№Р»Рµ
 
            nano /otus/1/task1/file_mess/secret_message
 
-#зашифрованное сообщение
+#Р·Р°С€РёС„СЂРѕРІР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
 
            https://github.com/sindresorhus/awesome
